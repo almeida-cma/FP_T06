@@ -1,5 +1,5 @@
-📚 COMPORTAMENTO DO BUBBLE SORT
-O Bubble Sort (ordenação por bolha) funciona da seguinte forma:
+#**📚 COMPORTAMENTO DO BUBBLE SORT**
+##O Bubble Sort (ordenação por bolha) funciona da seguinte forma:
 
 Comparações consecutivas: Percorre o vetor várias vezes, comparando elementos adjacentes (vizinhos)
 
