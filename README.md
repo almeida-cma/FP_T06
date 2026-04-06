@@ -22,3 +22,5 @@
 4ª passagem: 20,9,22,23,54 → 9,20,22,23,54
 
 *Resultado final: Vetor ordenado de forma crescente.*
+
+**Resumo:** Algoritmo que percorre o vetor repetidamente, comparando e trocando elementos adjacentes quando estão fora de ordem, fazendo os maiores valores "flutuarem" para o final a cada passagem.
