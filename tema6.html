@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 06 - Matrizes e Bubble Sort (Primeiros 4 Exemplos)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .card-header button {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .card-header button:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .card-content {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            position: relative;
+            max-height: 450px;
+            overflow-y: auto;
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.65rem;
+        }
+
+        .copy-btn:hover {
+            background: #7c3aed;
+        }
+
+        .simulador {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        .simulador-tela {
+            background: #0f172a;
+            color: #e2e8f0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            padding: 15px;
+            border-radius: 10px;
+            min-height: 250px;
+            max-height: 250px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin-bottom: 12px;
+        }
+
+        .simulador-input {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .simulador-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .simulador-input button {
+            padding: 10px 20px;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .simulador-input button:hover {
+            background: #7c3aed;
+        }
+
+        .guia {
+            background: #fef9e6;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 12px;
+        }
+
+        .guia h3 {
+            color: #f59e0b;
+            margin-bottom: 15px;
+        }
+
+        .guia ul, .guia ol {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+
+        .guia li {
+            margin: 8px 0;
+        }
+
+        .dica {
+            background: #dcfce7;
+            border-left: 4px solid #22c55e;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .exemplo-sintaxe {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            margin: 10px 0;
+            font-size: 0.85rem;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+        }
+
+        footer a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #22c55e;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 0.65rem;
+            margin-bottom: 8px;
+        }
+
+        .tabela-dicas {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .tabela-dicas th, .tabela-dicas td {
+            border: 1px solid #cbd5e1;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .tabela-dicas th {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Tema 06: Matrizes e Bubble Sort</h1>
+            <p>Primeiros 4 exemplos: Declaração, Diagonal Principal, Leitura de Dados e Bubble Sort</p>
+        </div>
+
+        <!-- Guia Textual Resumido -->
+        <div class="guia">
+            <h3>📖 O que são Matrizes?</h3>
+            <p>Matrizes são como "vetores de vetores" - estruturas bidimensionais que organizam dados em <strong>linhas e colunas</strong>. Enquanto um vetor tem apenas uma dimensão (linha), uma matriz tem duas dimensões (linha e coluna).</p>
+            
+            <div class="exemplo-sintaxe">
+                <strong>📌 Representação visual de uma Matriz 2x3:</strong><br>
+                Colunas:   0   1   2<br>
+                Linha 0:  [1] [2] [3]<br>
+                Linha 1:  [4] [5] [6]<br><br>
+                Para acessar um elemento: <strong>matriz[linha][coluna]</strong><br>
+                Ex: matriz[0][1] = 2 | matriz[1][2] = 6
+            </div>
+
+            <h3>🔧 Declaração de Matrizes</h3>
+            <div class="exemplo-sintaxe">
+                <strong>Sintaxe:</strong> tipo nome[linhas][colunas]<br><br>
+                <strong>Exemplos:</strong><br>
+                inteiro matriz[3][3]        // matriz 3x3 de inteiros<br>
+                real notas[2][4]            // 2 linhas, 4 colunas de reais<br>
+                cadeia nomes[3][5]          // 3 linhas, 5 colunas de textos
+            </div>
+
+            <h3>🔄 Matrizes com Laços de Repetição</h3>
+            <div class="exemplo-sintaxe">
+                <strong>Percorrendo uma matriz (laço dentro de laço):</strong><br>
+                para (inteiro i = 0; i < linhas; i++) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;para (inteiro j = 0; j < colunas; j++) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;escreva(matriz[i][j], " ")<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;escreva("\n")<br>
+                }
+            </div>
+
+            <h3>🫧 Bubble Sort (Ordenação por Flutuação)</h3>
+            <p>O Bubble Sort é um algoritmo simples que percorre repetidamente uma lista, comparando elementos adjacentes e trocando-os se estiverem na ordem errada. O maior elemento "flutua" para o final a cada passagem.</p>
+            
+            <div class="exemplo-sintaxe">
+                <strong>Funcionamento do Bubble Sort:</strong><br>
+                para (inteiro i = 0; i < tamanho - 1; i++) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;para (inteiro j = 0; j < tamanho - i - 1; j++) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;se (vetor[j] > vetor[j+1]) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trocar(vetor[j], vetor[j+1])<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                }
+            </div>
+
+            <div class="dica">
+                <strong>💡 Dica Importante:</strong><br>
+                • Matrizes usam DOIS índices: [linha][coluna]<br>
+                • O primeiro índice da linha é <strong>0</strong>, da coluna também é <strong>0</strong><br>
+                • Use laços "para" aninhados para percorrer matrizes<br>
+                • Bubble Sort é ideal para listas pequenas (até 50 elementos)
+            </div>
+        </div>
+
+        <!-- Exemplos Interativos (APENAS OS 4 PRIMEIROS) -->
+        <div class="grid">
+            <!-- Exemplo 1: Declaração e Acesso à Matriz -->
+            <div class="card">
+                <div class="card-header">
+                    📌 Exemplo 1: Declarando e Acessando Matriz
+                    <button onclick="copiarCodigo('codigo1')">📋 Copiar</button>
+                </div>
+                <div class="card-content">
+                    <div class="badge">✅ Matriz 2x4 com valores fixos</div>
+                    <div id="codigo1" class="code-block">
+                        <button class="copy-btn" onclick="copiarTexto(this)">Copiar</button>
+                        <pre>programa
+{
+    funcao inicio()
+    {
+        // Declara uma matriz 2x4 (2 linhas, 4 colunas)
+        inteiro matriz[2][4] = {{1, 2, 3, 4}, {5, 6, 7, 8}}
+        
+        escreva("=== ACESSANDO POSIÇÕES ESPECÍFICAS ===\n")
+        escreva("matriz[0][0] = ", matriz[0][0], "\n")
+        escreva("matriz[0][1] = ", matriz[0][1], "\n")
+        escreva("matriz[0][2] = ", matriz[0][2], "\n")
+        escreva("matriz[0][3] = ", matriz[0][3], "\n")
+        escreva("matriz[1][0] = ", matriz[1][0], "\n")
+        escreva("matriz[1][1] = ", matriz[1][1], "\n")
+        escreva("matriz[1][2] = ", matriz[1][2], "\n")
+        escreva("matriz[1][3] = ", matriz[1][3], "\n")
+        
+        escreva("\n=== PERCORRENDO A MATRIZ ===\n")
+        para (inteiro i = 0; i < 2; i++) {
+            para (inteiro j = 0; j < 4; j++) {
+                escreva(matriz[i][j], " ")
+            }
+            escreva("\n")
+        }
+    }
+}</pre>
+                    </div>
+
+                    <div class="simulador">
+                        <div class="simulador-tela" id="telaEx1">
+=== ACESSANDO POSIÇÕES ESPECÍFICAS ===
+matriz[0][0] = 1
+matriz[0][1] = 2
+matriz[0][2] = 3
+matriz[0][3] = 4
+matriz[1][0] = 5
+matriz[1][1] = 6
+matriz[1][2] = 7
+matriz[1][3] = 8
+
+=== PERCORRENDO A MATRIZ ===
+1 2 3 4 
+5 6 7 8
+                        </div>
+                        <div class="simulador-input">
+                            <input type="text" id="inputEx1" placeholder="Pressione ENTER para executar..." autocomplete="off">
+                            <button onclick="executarEx1()">▶ EXECUTAR</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exemplo 2: Matriz 3x3 - Diagonal Principal -->
+            <div class="card">
+                <div class="card-header">
+                    📐 Exemplo 2: Diagonal Principal da Matriz
+                    <button onclick="copiarCodigo('codigo2')">📋 Copiar</button>
+                </div>
+                <div class="card-content">
+                    <div class="badge">✅ Números aleatórios e diagonal principal</div>
+                    <div id="codigo2" class="code-block">
+                        <button class="copy-btn" onclick="copiarTexto(this)">Copiar</button>
+                        <pre>programa
+{
+    inclua biblioteca Util
+    
+    funcao inicio()
+    {
+        inteiro matriz[3][3]
+        cadeia pausa
+        
+        // Preenche a matriz com números aleatórios (0-50)
+        escreva("=== MATRIZ 3x3 GERADA ===\n")
+        para (inteiro i = 0; i < 3; i++) {
+            para (inteiro j = 0; j < 3; j++) {
+                matriz[i][j] = Util.sorteia(0, 50)
+                escreva(matriz[i][j], " ")
+            }
+            escreva("\n")
+        }
+        
+        // Mostra a diagonal principal
+        escreva("\n=== DIAGONAL PRINCIPAL ===\n")
+        para (inteiro i = 0; i < 3; i++) {
+            escreva(matriz[i][i], " ")
+        }
+        escreva("\n")
+        
+        escreva("\nPressione ENTER para finalizar...")
+        leia(pausa)
+    }
+}</pre>
+                    </div>
+
+                    <div class="simulador">
+                        <div class="simulador-tela" id="telaEx2">
+=== MATRIZ 3x3 GERADA ===
+12 34 27 
+45 18 39 
+23 41 33 
+
+=== DIAGONAL PRINCIPAL ===
+12 18 33
+
+Pressione ENTER para finalizar...
+                        </div>
+                        <div class="simulador-input">
+                            <input type="text" id="inputEx2" placeholder="Pressione ENTER para executar..." autocomplete="off">
+                            <button onclick="executarEx2()">▶ EXECUTAR</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <!-- Exemplo 3: Leitura de Dados na Matriz -->
+            <div class="card">
+                <div class="card-header">
+                    ✏️ Exemplo 3: Lendo Dados para a Matriz
+                    <button onclick="copiarCodigo('codigo3')">📋 Copiar</button>
+                </div>
+                <div class="card-content">
+                    <div class="badge">✅ 2 grupos de 5 alunos (2x5)</div>
+                    <div id="codigo3" class="code-block">
+                        <button class="copy-btn" onclick="copiarTexto(this)">Copiar</button>
+                        <pre>programa
+{
+    funcao inicio()
+    {
+        cadeia alunos[2][5]
+        cadeia pausa
+        
+        // Lê os nomes dos alunos
+        para (inteiro i = 0; i < 2; i++) {
+            escreva("\n=== GRUPO ", i + 1, " ===\n")
+            para (inteiro j = 0; j < 5; j++) {
+                escreva("Digite o nome do aluno ", j + 1, ": ")
+                leia(alunos[i][j])
+            }
+        }
+        
+        // Exibe os alunos por grupo
+        escreva("\n\n=== LISTA DE ALUNOS ===\n")
+        para (inteiro i = 0; i < 2; i++) {
+            escreva("\nGRUPO ", i + 1, ":\n")
+            para (inteiro j = 0; j < 5; j++) {
+                escreva("  Aluno ", j + 1, ": ", alunos[i][j], "\n")
+            }
+        }
+        
+        escreva("\nPressione ENTER para finalizar...")
+        leia(pausa)
+    }
+}</pre>
+                    </div>
+
+                    <div class="simulador">
+                        <div class="simulador-tela" id="telaEx3">
+=== GRUPO 1 ===
+Digite o nome do aluno 1: Ana
+Digite o nome do aluno 2: Bruno
+Digite o nome do aluno 3: Carla
+Digite o nome do aluno 4: Daniel
+Digite o nome do aluno 5: Elisa
+
+=== GRUPO 2 ===
+Digite o nome do aluno 1: Fábio
+Digite o nome do aluno 2: Gabriela
+Digite o nome do aluno 3: Henrique
+Digite o nome do aluno 4: Isabela
+Digite o nome do aluno 5: João
+
+=== LISTA DE ALUNOS ===
+
+GRUPO 1:
+  Aluno 1: Ana
+  Aluno 2: Bruno
+  Aluno 3: Carla
+  Aluno 4: Daniel
+  Aluno 5: Elisa
+
+GRUPO 2:
+  Aluno 1: Fábio
+  Aluno 2: Gabriela
+  Aluno 3: Henrique
+  Aluno 4: Isabela
+  Aluno 5: João
+
+Pressione ENTER para finalizar...
+                        </div>
+                        <div class="simulador-input">
+                            <input type="text" id="inputEx3" placeholder="Pressione ENTER para executar..." autocomplete="off">
+                            <button onclick="executarEx3()">▶ EXECUTAR</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exemplo 4: Bubble Sort -->
+            <div class="card">
+                <div class="card-header">
+                    🫧 Exemplo 4: Bubble Sort (Ordenação)
+                    <button onclick="copiarCodigo('codigo4')">📋 Copiar</button>
+                </div>
+                <div class="card-content">
+                    <div class="badge">✅ Ordenação de 10 números</div>
+                    <div id="codigo4" class="code-block">
+                        <button class="copy-btn" onclick="copiarTexto(this)">Copiar</button>
+                        <pre>programa
+{
+    funcao inicio()
+    {
+        inteiro numeros[10]
+        inteiro tamanho = 10
+        inteiro auxiliar
+        cadeia pausa
+        
+        // Lê os números
+        escreva("=== DIGITE 10 NÚMEROS ===\n")
+        para (inteiro i = 0; i < tamanho; i++) {
+            escreva("Número ", i + 1, ": ")
+            leia(numeros[i])
+        }
+        
+        // Bubble Sort - Ordenação crescente
+        para (inteiro i = 0; i < tamanho - 1; i++) {
+            para (inteiro j = 0; j < tamanho - i - 1; j++) {
+                se (numeros[j] > numeros[j + 1]) {
+                    // Troca os elementos
+                    auxiliar = numeros[j]
+                    numeros[j] = numeros[j + 1]
+                    numeros[j + 1] = auxiliar
+                }
+            }
+        }
+        
+        // Exibe os números ordenados
+        escreva("\n=== NÚMEROS ORDENADOS ===\n")
+        para (inteiro i = 0; i < tamanho; i++) {
+            escreva(numeros[i], " ")
+        }
+        escreva("\n")
+        
+        escreva("\nPressione ENTER para finalizar...")
+        leia(pausa)
+    }
+}</pre>
+                    </div>
+
+                    <div class="simulador">
+                        <div class="simulador-tela" id="telaEx4">
+=== DIGITE 10 NÚMEROS ===
+Número 1: 34
+Número 2: 12
+Número 3: 56
+Número 4: 23
+Número 5: 89
+Número 6: 5
+Número 7: 77
+Número 8: 45
+Número 9: 18
+Número 10: 92
+
+=== NÚMEROS ORDENADOS ===
+5 12 18 23 34 45 56 77 89 92
+
+Pressione ENTER para finalizar...
+                        </div>
+                        <div class="simulador-input">
+                            <input type="text" id="inputEx4" placeholder="Pressione ENTER para executar..." autocomplete="off">
+                            <button onclick="executarEx4()">▶ EXECUTAR</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>📌 Tema 06 - Matrizes e Bubble Sort | Primeiros 4 Exemplos</p>
+            <p>Teste os códigos no <a href="https://portugol.dev/" target="_blank">Portugol Web Studio</a> | Copie e cole para praticar!</p>
+        </footer>
+    </div>
+
+    <script>
+        function copiarTexto(botao) {
+            const pre = botao.parentElement.querySelector('pre');
+            navigator.clipboard.writeText(pre.innerText);
+            const original = botao.innerText;
+            botao.innerText = '✅ Copiado!';
+            setTimeout(() => botao.innerText = original, 2000);
+        }
+
+        function copiarCodigo(id) {
+            const pre = document.getElementById(id).querySelector('pre');
+            navigator.clipboard.writeText(pre.innerText);
+            alert('✅ Código copiado!');
+        }
+
+        // Exemplo 1 - Demonstrativo
+        function executarEx1() {
+            let input = document.getElementById('inputEx1').value;
+            if (input === "") {
+                alert("Este é um exemplo demonstrativo. Observe o código ao lado!");
+            }
+            document.getElementById('inputEx1').value = '';
+        }
+
+        // Exemplo 2 - Matriz 3x3 com números aleatórios
+        function executarEx2() {
+            let matriz = [];
+            let numeros = [];
+            for (let i = 0; i < 9; i++) {
+                numeros.push(Math.floor(Math.random() * 51));
+            }
+            
+            let saida = "=== MATRIZ 3x3 GERADA ===\n";
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    let idx = i * 3 + j;
+                    saida += numeros[idx] + " ";
+                }
+                saida += "\n";
+            }
+            
+            saida += "\n=== DIAGONAL PRINCIPAL ===\n";
+            saida += numeros[0] + " " + numeros[4] + " " + numeros[8] + "\n";
+            saida += "\nPressione ENTER para finalizar...";
+            
+            document.getElementById('telaEx2').innerHTML = saida;
+            document.getElementById('inputEx2').value = '';
+        }
+
+        // Exemplo 3 - Alunos (demonstrativo)
+        function executarEx3() {
+            let input = document.getElementById('inputEx3').value;
+            if (input === "") {
+                alert("Este é um exemplo demonstrativo. Altere os nomes no código!");
+            }
+            document.getElementById('inputEx3').value = '';
+        }
+
+        // Exemplo 4 - Bubble Sort interativo
+        let numerosEx4 = [];
+        let posEx4 = 0;
+
+        function executarEx4() {
+            let input = document.getElementById('inputEx4').value;
+            let valor = parseInt(input);
+            
+            if (isNaN(valor) || valor < 0 || valor > 100) {
+                alert("Digite um número válido entre 0 e 100!");
+                document.getElementById('inputEx4').value = '';
+                return;
+            }
+            
+            numerosEx4.push(valor);
+            posEx4++;
+            
+            if (posEx4 < 10) {
+                document.getElementById('telaEx4').innerHTML = 
+`=== DIGITE 10 NÚMEROS ===
+Número ${posEx4}: ${valor}
+
+Aguardando mais ${10 - posEx4} número(s)...`;
+            } else {
+                // Ordena os números
+                let ordenados = [...numerosEx4];
+                for (let i = 0; i < ordenados.length - 1; i++) {
+                    for (let j = 0; j < ordenados.length - i - 1; j++) {
+                        if (ordenados[j] > ordenados[j + 1]) {
+                            let temp = ordenados[j];
+                            ordenados[j] = ordenados[j + 1];
+                            ordenados[j + 1] = temp;
+                        }
+                    }
+                }
+                
+                let saida = "=== DIGITE 10 NÚMEROS ===\n";
+                for (let i = 0; i < numerosEx4.length; i++) {
+                    saida += `Número ${i + 1}: ${numerosEx4[i]}\n`;
+                }
+                saida += "\n=== NÚMEROS ORDENADOS ===\n";
+                saida += ordenados.join(" ") + "\n";
+                saida += "\nPressione ENTER para finalizar...";
+                
+                document.getElementById('telaEx4').innerHTML = saida;
+                posEx4 = 0;
+                numerosEx4 = [];
+            }
+            
+            document.getElementById('inputEx4').value = '';
+        }
+
+        // Enter key support for all 4 inputs
+        document.getElementById('inputEx1').addEventListener('keypress', e => e.key === 'Enter' && executarEx1());
+        document.getElementById('inputEx2').addEventListener('keypress', e => e.key === 'Enter' && executarEx2());
+        document.getElementById('inputEx3').addEventListener('keypress', e => e.key === 'Enter' && executarEx3());
+        document.getElementById('inputEx4').addEventListener('keypress', e => e.key === 'Enter' && executarEx4());
+    </script>
+</body>
+</html>

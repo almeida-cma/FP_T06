@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Bubble Sort - Simulador Interativo [54,23,22,20,9]</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            height: 100vh;
+            overflow: hidden;
+            padding: 12px;
+        }
+
+        .container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .title {
+            text-align: center;
+            color: white;
+            margin-bottom: 12px;
+            flex-shrink: 0;
+        }
+
+        .title h1 {
+            font-size: 1.3rem;
+            margin-bottom: 3px;
+        }
+
+        .title p {
+            opacity: 0.8;
+            font-size: 0.75rem;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            gap: 12px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        /* Painel do Código */
+        .code-panel {
+            background: #1e293b;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .panel-header {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 8px 12px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+            flex-shrink: 0;
+        }
+
+        .panel-header button {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+
+        .code-container {
+            padding: 10px;
+            font-family: 'Courier New', 'Fira Code', monospace;
+            font-size: 0.7rem;
+            line-height: 1.5;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        /* Scrollbar personalizada */
+        .code-container::-webkit-scrollbar,
+        .steps-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .code-container::-webkit-scrollbar-track,
+        .steps-area::-webkit-scrollbar-track {
+            background: #334155;
+            border-radius: 3px;
+        }
+
+        .code-container::-webkit-scrollbar-thumb,
+        .steps-area::-webkit-scrollbar-thumb {
+            background: #4f46e5;
+            border-radius: 3px;
+        }
+
+        .code-line {
+            color: #94a3b8;
+            padding: 2px 6px;
+            margin: 1px 0;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-size: 0.68rem;
+        }
+
+        .code-line.active {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .line-number {
+            display: inline-block;
+            width: 35px;
+            color: #64748b;
+            user-select: none;
+            font-size: 0.65rem;
+        }
+
+        .code-line.active .line-number {
+            color: white;
+        }
+
+        .code-text {
+            display: inline-block;
+            white-space: pre-wrap;
+        }
+
+        /* Painel da Simulação */
+        .sim-panel {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .sim-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 8px 12px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .sim-content {
+            padding: 12px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        /* Painel de Variáveis */
+        .variaveis-panel {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #4f46e5;
+        }
+
+        .variaveis-panel h3 {
+            font-size: 0.75rem;
+            color: #1e3c72;
+            margin-bottom: 8px;
+            text-align: center;
+            background: #4f46e5;
+            color: white;
+            padding: 5px;
+            border-radius: 6px;
+        }
+
+        .var-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .var-card {
+            text-align: center;
+            background: white;
+            padding: 6px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-left: 3px solid #4f46e5;
+        }
+
+        .var-label {
+            font-size: 0.6rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .var-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #1e3c72;
+            font-family: monospace;
+        }
+
+        .var-value.small {
+            font-size: 1rem;
+        }
+
+        /* Vetor Visual */
+        .vector-area {
+            background: #f1f5f9;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .vector-area h3 {
+            font-size: 0.75rem;
+            color: #1e3c72;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .vector-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .vector-cell {
+            background: #4f46e5;
+            color: white;
+            width: 55px;
+            height: 55px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .vector-cell .index {
+            font-size: 0.55rem;
+            opacity: 0.8;
+        }
+
+        .vector-cell .value {
+            font-size: 1.1rem;
+        }
+
+        .vector-cell.comparing {
+            background: #f59e0b;
+            transform: scale(1.05);
+        }
+
+        .vector-cell.swapping {
+            background: #22c55e;
+            animation: pulse 0.3s;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Comparação em Destaque */
+        .comparison-area {
+            background: #eef2ff;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .comparison-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 8px 0;
+        }
+
+        .comparison-item {
+            background: white;
+            padding: 8px 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .comparison-item .label {
+            font-size: 0.6rem;
+            color: #64748b;
+        }
+
+        .comparison-item .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        .comparison-operator {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+
+        .comparison-result {
+            margin-top: 8px;
+            padding: 6px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .comparison-result.true {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .comparison-result.false {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Status */
+        .status-area {
+            background: #e2e8f0;
+            border-radius: 10px;
+            padding: 8px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.7rem;
+        }
+
+        .status-badge.ordenando {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .status-badge.ordenado {
+            background: #22c55e;
+            color: white;
+        }
+
+        /* Passo a Passo */
+        .steps-area {
+            background: #fef9e6;
+            border-radius: 10px;
+            padding: 8px;
+            margin-bottom: 10px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        .steps-area strong {
+            font-size: 0.7rem;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .step-message {
+            font-size: 0.65rem;
+            padding: 4px;
+            margin: 3px 0;
+            background: white;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+
+        .step-message.current {
+            background: #fef3c7;
+            border-left: 3px solid #f59e0b;
+            font-weight: bold;
+        }
+
+        /* Controles */
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .controls button {
+            padding: 8px 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-step {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-reset {
+            background: #22c55e;
+            color: white;
+        }
+
+        .controls button:hover {
+            transform: scale(1.02);
+            filter: brightness(1.05);
+        }
+
+        .progress {
+            text-align: center;
+            font-size: 0.65rem;
+            color: #64748b;
+            margin-top: 8px;
+        }
+
+        .dica {
+            background: #fef9e6;
+            border-left: 3px solid #f59e0b;
+            padding: 6px;
+            margin-top: 8px;
+            font-size: 0.6rem;
+            color: #b45309;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            <h1>🫧 Bubble Sort - Simulador Passo a Passo</h1>
+            <p>Vetor: [54, 23, 22, 20, 9] | Clique em <strong>PRÓXIMO PASSO</strong> para avançar</p>
+        </div>
+
+        <div class="main-grid">
+            <div class="code-panel">
+                <div class="panel-header">
+                    <span>📝 Código em Portugol (5 números)</span>
+                    <button id="btnCopiarCodigo">📋 Copiar</button>
+                </div>
+                <div class="code-container" id="codeContainer">
+                    <div id="codeLines"></div>
+                </div>
+            </div>
+
+            <div class="sim-panel">
+                <div class="sim-header">
+                    🎮 Simulação Passo a Passo
+                </div>
+                <div class="sim-content">
+                    <div class="variaveis-panel">
+                        <h3>📊 ESTADO ATUAL DAS VARIÁVEIS</h3>
+                        <div class="var-grid">
+                            <div class="var-card">
+                                <div class="var-label">tamanho</div>
+                                <div class="var-value" id="varTamanho">5</div>
+                            </div>
+                            <div class="var-card">
+                                <div class="var-label">i (passada)</div>
+                                <div class="var-value" id="varI">-</div>
+                            </div>
+                            <div class="var-card">
+                                <div class="var-label">j (posição)</div>
+                                <div class="var-value" id="varJ">-</div>
+                            </div>
+                            <div class="var-card">
+                                <div class="var-label">auxiliar</div>
+                                <div class="var-value" id="varAuxiliar" style="background:#fef3c7; border-radius:6px;">-</div>
+                            </div>
+                        </div>
+                        <div class="var-grid">
+                            <div class="var-card">
+                                <div class="var-label">numeros[j]</div>
+                                <div class="var-value small" id="varValorJ">-</div>
+                            </div>
+                            <div class="var-card">
+                                <div class="var-label">numeros[j+1]</div>
+                                <div class="var-value small" id="varValorJ1">-</div>
+                            </div>
+                            <div class="var-card">
+                                <div class="var-label">numeros[j] > numeros[j+1]?</div>
+                                <div class="var-value small" id="varComparacao">?</div>
+                            </div>
+                            <div class="var-card">
+                                <div class="var-label">Vai trocar?</div>
+                                <div class="var-value small" id="varVaiTrocar">?</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="vector-area">
+                        <h3>📦 Vetor numeros[] (5 posições)</h3>
+                        <div class="vector-container" id="vectorContainer"></div>
+                    </div>
+
+                    <div class="comparison-area" id="comparisonArea" style="display: none;">
+                        <h3>🔍 COMPARAÇÃO ATUAL</h3>
+                        <div class="comparison-box">
+                            <div class="comparison-item">
+                                <div class="label">numeros[j]</div>
+                                <div class="value" id="compValorJ">-</div>
+                            </div>
+                            <div class="comparison-operator">></div>
+                            <div class="comparison-item">
+                                <div class="label">numeros[j+1]</div>
+                                <div class="value" id="compValorJ1">-</div>
+                            </div>
+                        </div>
+                        <div class="comparison-result" id="compResultado"></div>
+                    </div>
+
+                    <div class="status-area">
+                        <span class="status-badge ordenando" id="statusBadge">🔄 ORDENANDO...</span>
+                    </div>
+
+                    <div class="steps-area">
+                        <strong>📝 O QUE ACONTECEU NESTE PASSO:</strong>
+                        <div id="stepsContainer"></div>
+                    </div>
+
+                    <div class="controls">
+                        <button class="btn-step" id="btnProximo">⏩ PRÓXIMO PASSO</button>
+                        <button class="btn-reset" id="btnReset">🔄 REINICIAR</button>
+                    </div>
+                    <div class="progress" id="progressText">Pronto! Clique em PRÓXIMO PASSO</div>
+                    <div class="dica">
+                        💡 <strong>Dica:</strong> Observe que a variável <strong>auxiliar</strong> mantém o último valor que foi armazenado nela! Ela só é alterada quando uma nova troca acontece.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const linhasCodigo = [
+            "programa",
+            "{",
+            "    funcao inicio()",
+            "    {",
+            "        inteiro numeros[5]",
+            "        inteiro tamanho = 5",
+            "        inteiro auxiliar",
+            "        cadeia pausa",
+            "        ",
+            "        // Lê os números",
+            "        escreva(\"=== DIGITE 5 NÚMEROS ===\")",
+            "        para (inteiro i = 0; i < tamanho; i++) {",
+            "            escreva(\"Número \", i + 1, \": \")",
+            "            leia(numeros[i])",
+            "        }",
+            "        ",
+            "        // Bubble Sort",
+            "        para (inteiro i = 0; i < tamanho - 1; i++) {",
+            "            para (inteiro j = 0; j < tamanho - i - 1; j++) {",
+            "                se (numeros[j] > numeros[j + 1]) {",
+            "                    auxiliar = numeros[j]",
+            "                    numeros[j] = numeros[j + 1]",
+            "                    numeros[j + 1] = auxiliar",
+            "                }",
+            "            }",
+            "        }",
+            "        ",
+            "        // Exibe resultado",
+            "        escreva(\"\\n=== NÚMEROS ORDENADOS ===\")",
+            "        para (inteiro i = 0; i < tamanho; i++) {",
+            "            escreva(numeros[i], \" \")",
+            "        }",
+            "        escreva(\"\\n\")",
+            "    }",
+            "}"
+        ];
+
+        const vetorOriginal = [54, 23, 22, 20, 9];
+        let passos = [];
+        let passoAtual = 0;
+        let ultimoAuxiliar = '-';
+
+        function renderizarCodigo() {
+            const container = document.getElementById('codeLines');
+            if (!container) return;
+            container.innerHTML = '';
+            for (let idx = 0; idx < linhasCodigo.length; idx++) {
+                const linha = linhasCodigo[idx];
+                const div = document.createElement('div');
+                div.className = 'code-line';
+                div.id = 'line-' + (idx + 1);
+                const numeroLinha = (idx + 1).toString().padStart(2, ' ');
+                const linhaComIndentacao = linha.replace(/^(\s+)/, function(match) {
+                    return match.replace(/ /g, '&nbsp;');
+                });
+                div.innerHTML = '<span class="line-number">' + numeroLinha + '</span> <span class="code-text">' + linhaComIndentacao + '</span>';
+                container.appendChild(div);
+            }
+        }
+
+        function destacarLinha(numeroLinha) {
+            const linhas = document.querySelectorAll('.code-line');
+            for (let i = 0; i < linhas.length; i++) {
+                linhas[i].classList.remove('active');
+            }
+            if (numeroLinha) {
+                const linha = document.getElementById('line-' + numeroLinha);
+                if (linha) {
+                    linha.classList.add('active');
+                    linha.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }
+        }
+
+        function gerarPassos() {
+            let arr = [...vetorOriginal];
+            let passosTemp = [];
+            let passoNum = 1;
+            let auxAtual = '-';
+            
+            passosTemp.push({
+                id: passoNum++,
+                tipo: 'inicio',
+                vetor: [...arr],
+                i: -1,
+                j: -1,
+                auxiliar: auxAtual,
+                linha: 5,
+                mensagem: "🚀 INÍCIO: Vetor original = [" + arr.join(', ') + "]",
+                comparando: false,
+                valores: null,
+                resultadoComp: null
+            });
+            
+            for (let i = 0; i < arr.length - 1; i++) {
+                for (let j = 0; j < arr.length - i - 1; j++) {
+                    let ehMaior = arr[j] > arr[j+1];
+                    
+                    passosTemp.push({
+                        id: passoNum++,
+                        tipo: 'comparacao',
+                        vetor: [...arr],
+                        i: i,
+                        j: j,
+                        auxiliar: auxAtual,
+                        linha: 19,
+                        mensagem: `🔍 Comparando numeros[${j}]=${arr[j]} > numeros[${j+1}]=${arr[j+1]}? ${ehMaior ? 'SIM' : 'NÃO'}`,
+                        comparando: true,
+                        valores: { a: arr[j], b: arr[j+1], resultado: ehMaior },
+                        resultadoComp: ehMaior
+                    });
+                    
+                    if (ehMaior) {
+                        auxAtual = arr[j];
+                        passosTemp.push({
+                            id: passoNum++,
+                            tipo: 'preTroca',
+                            vetor: [...arr],
+                            i: i,
+                            j: j,
+                            auxiliar: auxAtual,
+                            linha: 20,
+                            mensagem: `🔄 auxiliar = numeros[${j}] = ${arr[j]} (auxiliar agora vale ${auxAtual})`,
+                            comparando: false,
+                            valores: null,
+                            resultadoComp: null
+                        });
+                        
+                        let temp = arr[j];
+                        arr[j] = arr[j+1];
+                        arr[j+1] = temp;
+                        
+                        passosTemp.push({
+                            id: passoNum++,
+                            tipo: 'troca',
+                            vetor: [...arr],
+                            i: i,
+                            j: j,
+                            auxiliar: auxAtual,
+                            linha: 22,
+                            mensagem: `✅ TROCA REALIZADA! numeros[${j}] = ${arr[j]}, numeros[${j+1}] = ${arr[j+1]}`,
+                            comparando: false,
+                            valores: null,
+                            resultadoComp: null
+                        });
+                    }
+                }
+                
+                if (i < arr.length - 2) {
+                    passosTemp.push({
+                        id: passoNum++,
+                        tipo: 'fimPassada',
+                        vetor: [...arr],
+                        i: i,
+                        j: -1,
+                        auxiliar: auxAtual,
+                        linha: 18,
+                        mensagem: `📌 FIM DA PASSADA ${i+1} | Vetor: [${arr.join(', ')}] (auxiliar ainda vale ${auxAtual})`,
+                        comparando: false,
+                        valores: null,
+                        resultadoComp: null
+                    });
+                }
+            }
+            
+            passosTemp.push({
+                id: passoNum++,
+                tipo: 'ordenado',
+                vetor: [...arr],
+                i: -1,
+                j: -1,
+                auxiliar: auxAtual,
+                linha: 26,
+                mensagem: `🏆 VETOR ORDENADO! Resultado final: [${arr.join(', ')}]`,
+                comparando: false,
+                valores: null,
+                resultadoComp: null
+            });
+            
+            return passosTemp;
+        }
+
+        function atualizarTela() {
+            if (passoAtual >= passos.length) return;
+            const passo = passos[passoAtual];
+            const vetor = passo.vetor;
+            
+            destacarLinha(passo.linha);
+            
+            document.getElementById('varI').innerHTML = passo.i >= 0 ? passo.i : '-';
+            document.getElementById('varJ').innerHTML = passo.j >= 0 ? passo.j : '-';
+            document.getElementById('varAuxiliar').innerHTML = passo.auxiliar && passo.auxiliar !== '-' ? passo.auxiliar : '-';
+            
+            if (passo.j >= 0 && vetor[passo.j] !== undefined) {
+                document.getElementById('varValorJ').innerHTML = vetor[passo.j];
+                document.getElementById('varValorJ1').innerHTML = vetor[passo.j+1] !== undefined ? vetor[passo.j+1] : '-';
+            } else {
+                document.getElementById('varValorJ').innerHTML = '-';
+                document.getElementById('varValorJ1').innerHTML = '-';
+            }
+            
+            if (passo.resultadoComp !== null && passo.resultadoComp !== undefined) {
+                document.getElementById('varComparacao').innerHTML = passo.resultadoComp ? 'SIM' : 'NÃO';
+                document.getElementById('varVaiTrocar').innerHTML = passo.resultadoComp ? '✅ SIM' : '❌ NÃO';
+            } else {
+                document.getElementById('varComparacao').innerHTML = '?';
+                document.getElementById('varVaiTrocar').innerHTML = '?';
+            }
+            
+            let ordenado = true;
+            for (let k = 0; k < vetor.length - 1; k++) {
+                if (vetor[k] > vetor[k+1]) ordenado = false;
+            }
+            
+            const container = document.getElementById('vectorContainer');
+            container.innerHTML = '';
+            for (let idx = 0; idx < vetor.length; idx++) {
+                const cell = document.createElement('div');
+                cell.className = 'vector-cell';
+                if (passo.comparando && (idx === passo.j || idx === passo.j + 1)) {
+                    cell.classList.add('comparing');
+                }
+                if ((passo.tipo === 'troca') && (idx === passo.j || idx === passo.j + 1)) {
+                    cell.classList.add('swapping');
+                }
+                cell.innerHTML = '<div class="index">[' + idx + ']</div><div class="value">' + vetor[idx] + '</div>';
+                container.appendChild(cell);
+            }
+            
+            const compArea = document.getElementById('comparisonArea');
+            if (passo.tipo === 'comparacao') {
+                compArea.style.display = 'block';
+                document.getElementById('compValorJ').innerHTML = passo.valores.a;
+                document.getElementById('compValorJ1').innerHTML = passo.valores.b;
+                const resultDiv = document.getElementById('compResultado');
+                if (passo.valores.resultado) {
+                    resultDiv.className = 'comparison-result true';
+                    resultDiv.innerHTML = '✅ ' + passo.valores.a + ' > ' + passo.valores.b + ' → VERDADEIRO! Vai trocar!';
+                } else {
+                    resultDiv.className = 'comparison-result false';
+                    resultDiv.innerHTML = '❌ ' + passo.valores.a + ' > ' + passo.valores.b + ' → FALSO! Não vai trocar.';
+                }
+            } else {
+                compArea.style.display = 'none';
+            }
+            
+            const badge = document.getElementById('statusBadge');
+            if (ordenado || passo.tipo === 'ordenado') {
+                badge.className = 'status-badge ordenado';
+                badge.innerHTML = '✅ VETOR ORDENADO';
+            } else {
+                badge.className = 'status-badge ordenando';
+                badge.innerHTML = '🔄 ORDENANDO...';
+            }
+            
+            const stepsContainer = document.getElementById('stepsContainer');
+            const inicio = Math.max(0, passoAtual - 3);
+            const fim = Math.min(passos.length, passoAtual + 1);
+            let html = '';
+            for (let i = inicio; i < fim; i++) {
+                const p = passos[i];
+                const isCurrent = i === passoAtual;
+                html += '<div class="step-message ' + (isCurrent ? 'current' : '') + '">' + p.mensagem + '</div>';
+            }
+            stepsContainer.innerHTML = html;
+            
+            const progresso = Math.round((passoAtual / (passos.length - 1)) * 100);
+            document.getElementById('progressText').innerHTML = 'Passo ' + (passoAtual + 1) + ' de ' + passos.length + ' | Progresso: ' + progresso + '%';
+        }
+
+        function proximoPasso() {
+            if (passoAtual < passos.length - 1) {
+                passoAtual++;
+                atualizarTela();
+            } else {
+                alert('🎉 Parabéns! Você completou toda a simulação! Clique em "Reiniciar" para executar novamente.');
+            }
+        }
+
+        function resetSimulacao() {
+            passos = gerarPassos();
+            passoAtual = 0;
+            atualizarTela();
+        }
+
+        function copiarCodigo() {
+            const codigo = linhasCodigo.join('\n');
+            navigator.clipboard.writeText(codigo).then(() => {
+                alert('✅ Código copiado para a área de transferência!');
+            }).catch(() => {
+                alert('❌ Erro ao copiar. Selecione manualmente.');
+            });
+        }
+
+        renderizarCodigo();
+        passos = gerarPassos();
+        atualizarTela();
+        
+        document.getElementById('btnProximo').addEventListener('click', proximoPasso);
+        document.getElementById('btnReset').addEventListener('click', resetSimulacao);
+        document.getElementById('btnCopiarCodigo').addEventListener('click', copiarCodigo);
+    </script>
+</body>
+</html>

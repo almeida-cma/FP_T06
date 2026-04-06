@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 6 - Matrizes | Material de Apoio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #3b82f6;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            margin-top: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .card-header {
+            padding: 25px;
+            text-align: center;
+            font-size: 3rem;
+        }
+
+        .card-header.tema6 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-header.guia { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .card-header.portugol { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .card-header.vscode { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .card-header.bubble { background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); }
+
+        .card-header i {
+            font-size: 3rem;
+        }
+
+        .card-content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #1e293b;
+        }
+
+        .card-content p {
+            color: #64748b;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: scale(1.02);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #3b82f6;
+            color: #3b82f6;
+        }
+
+        .btn-outline:hover {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .recursos {
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .recursos h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .links-recursos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .link-recurso {
+            background: #334155;
+            padding: 12px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .link-recurso:hover {
+            background: #475569;
+            transform: scale(1.02);
+        }
+
+        .footer {
+            background: #0f172a;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid #334155;
+        }
+
+        .footer p {
+            color: #94a3b8;
+            margin-bottom: 15px;
+        }
+
+        .footer a {
+            color: #60a5fa;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .suporte-btn {
+            display: inline-block;
+            background: #ef4444;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+        }
+
+        .suporte-btn:hover {
+            background: #dc2626;
+            transform: scale(1.02);
+        }
+
+        .envio-btn {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+        }
+
+        .envio-btn:hover {
+            background: #059669;
+            transform: scale(1.02);
+        }
+
+        .portugol-btn {
+            display: inline-block;
+            background: #8b5cf6;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+        }
+
+        .portugol-btn:hover {
+            background: #7c3aed;
+            transform: scale(1.02);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Tema 6: Matrizes</h1>
+            <p>Material completo para estudo e prática</p>
+            <div class="badge">🎯 5 recursos disponíveis</div>
+        </div>
+
+        <div class="grid">
+            <!-- Card 1: Tema 6 -->
+            <div class="card">
+                <div class="card-header tema6">
+                    🎬
+                </div>
+                <div class="card-content">
+                    <h3>Tema 6 - Matrizes</h3>
+                    <p>Aplicação prática com cinema 3x4. Conceitos de matriz bidimensional, índices, linhas e colunas.</p>
+                    <a href="tema6.html" class="btn btn-primary" target="_blank">🎯 Abrir Tema 6 →</a>
+                </div>
+            </div>
+
+            <!-- Card 2: Guia PDF -->
+            <div class="card">
+                <div class="card-header guia">
+                    📘
+                </div>
+                <div class="card-content">
+                    <h3>Guia Textual</h3>
+                    <p>Material completo explicando conceitos de matrizes, exemplos e exercícios práticos.</p>
+                    <a href="Tema6.pdf" class="btn btn-primary" target="_blank">📥 Baixar Guia (PDF)</a>
+                </div>
+            </div>
+
+            <!-- Card 3: Atividade Portugol -->
+            <div class="card">
+                <div class="card-header portugol">
+                    🇵🇹
+                </div>
+                <div class="card-content">
+                    <h3>Atividade em Portugol</h3>
+                    <p>Exercícios para praticar matrizes no Portugol Webstudio.</p>
+                    <a href="Atividade_Portugol.pdf" class="btn btn-primary" target="_blank">📥 Baixar Atividade (PDF)</a>
+                </div>
+            </div>
+
+            <!-- Card 4: Atividade VSCode -->
+            <div class="card">
+                <div class="card-header vscode">
+                    💻
+                </div>
+                <div class="card-content">
+                    <h3>Atividade em VSCode</h3>
+                    <p>Desafios práticos de matrizes usando JavaScript no Visual Studio Code.</p>
+                    <a href="Atividade_VSCode.pdf" class="btn btn-primary" target="_blank">📥 Baixar Atividade (PDF)</a>
+                </div>
+            </div>
+
+            <!-- Card 5: Bubble Sort -->
+            <div class="card">
+                <div class="card-header bubble">
+                    🔄
+                </div>
+                <div class="card-content">
+                    <h3>Bubble Sort</h3>
+                    <p>Algoritmo de ordenação. Compara elementos adjacentes e troca suas posições se estiverem na ordem errada.</p>
+                    <a href="BubbleSort.html" class="btn btn-primary" target="_blank">🔄 Abrir Bubble Sort →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recursos Rápidos -->
+        <div class="recursos">
+            <h3>🔗 Links Úteis</h3>
+            <div class="links-recursos">
+                <a href="https://portugol.dev/" class="link-recurso" target="_blank">🌐 Portugol Webstudio</a>
+                <a href="https://forms.gle/QvYjXnrAenbMSyTR8" class="link-recurso" target="_blank" style="background:#ef4444;">🆘 Solicitar Suporte</a>
+                <a href="https://forms.gle/T9QSe3PyEpru3t538" class="link-recurso" target="_blank" style="background:#10b981;">📤 Enviar Atividades</a>
+            </div>
+        </div>
+
+        <!-- Rodapé -->
+        <div class="footer">
+            <p>📌 <strong>Dúvidas ou problemas?</strong> Utilize os canais de suporte abaixo</p>
+            <a href="https://forms.gle/QvYjXnrAenbMSyTR8" class="suporte-btn" target="_blank">🆘 Solicitar Suporte</a>
+            <a href="https://portugol.dev/" class="portugol-btn" target="_blank">🌐 Portugol Webstudio</a>
+            <a href="https://forms.gle/T9QSe3PyEpru3t538" class="envio-btn" target="_blank">📤 Envio de Atividades</a>
+            <p style="margin-top: 20px; font-size: 0.8rem;">&copy; 2026 - Material didático para estudo de Matrizes e Algoritmos de Ordenação</p>
+        </div>
+    </div>
+</body>
+</html>
